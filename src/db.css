@@ -1,0 +1,53 @@
+/* dark-blue-theme.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1A2A44; /* Dark blue background */
+    color: #D1E0E0; /* Light grey text */
+    line-height: 1.6;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #0D1B2A; /* Darker blue header */
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+}
+
+section {
+    margin: 20px 0;
+}
+
+h2 {
+    color: #4B9ED9; /* Light blue for section titles */
+}
+
+ul {
+    line-height: 1.8;
+}
+
+.cta-button {
+    background-color: #4B9ED9; /* Light blue button */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.cta-button:hover {
+    background-color: #3A80A4; /* Darker blue on hover */
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #0D1B2A;
+    color: white;
+}
+
