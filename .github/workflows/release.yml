@@ -1,0 +1,57 @@
+name: Release Statically Linked Rust Binary
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers when a tag like 'v1.0.0' is pushed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-musl   # Linux (64-bit, statically linked)
+          - aarch64-unknown-linux-musl  # Linux (ARM 64-bit)
+          - x86_64-apple-darwin         # macOS (Intel)
+          - aarch64-apple-darwin        # macOS (Apple Silicon M1/M2)
+          - x86_64-pc-windows-msvc      # Windows (64-bit)
+
+    env:
+      BINARY_NAME: my_rust_tool
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Cross for cross-compilation
+        run: cargo install cross
+
+      - name: Install Rust targets
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Build with Cross
+        run: cross build --target ${{ matrix.target }} --release --verbose
+
+      - name: Package Release
+        run: |
+          mkdir -p release
+          if [[ "${{ matrix.target }}" == *"windows"* ]]; then
+            cp target/${{ matrix.target }}/release/$BINARY_NAME.exe release/
+            zip -r ${{ matrix.target }}.zip release
+          else
+            cp target/${{ matrix.target }}/release/$BINARY_NAME release/
+            tar -czvf ${{ matrix.target }}.tar.gz -C release $BINARY_NAME
+          fi
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.tar.gz
+            *.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
